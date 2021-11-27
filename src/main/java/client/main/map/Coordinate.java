@@ -26,6 +26,11 @@ public class Coordinate {
 	}
 
 	@Override
+	public String toString() {
+		return "Coordinate [x=" + x + ", y=" + y + "]";
+	}
+
+	@Override
 	public boolean equals(Object o) {
 
 		// If the object is compared with itself then return true

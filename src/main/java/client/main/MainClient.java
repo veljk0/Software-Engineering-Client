@@ -11,6 +11,7 @@ import MessagesGameState.GameState;
 import client.main.connection.NetworkConnector;
 import client.main.map.Map;
 import client.main.map.MapGenerator;
+import client.main.validators.IslandValidator;
 import reactor.core.publisher.Mono;
 
 public class MainClient {
@@ -73,6 +74,9 @@ public class MainClient {
 		gen.generateMap(map);
 		System.out.println(map.getNodes().size());
 		map.printMap();
+
+		IslandValidator islandValidator = new IslandValidator();
+		System.out.println(islandValidator.validateMap(map));
 		// networkConnector.registerPlayer();
 
 		// template webclient configuration, will be reused/customized for each
