@@ -17,12 +17,12 @@ public class MapGenerator {
 		HashMap<Coordinate, MapNode> tmp = new HashMap<>();
 		List<Terrain> terrains = new ArrayList<>();
 		terrains = generateTerrains();
-		System.out.println(terrains.size());
 		System.out.println("===== Map Generator =====");
 		System.out.println(">> terranins have been generated & shuffled <<");
 		for (int i = 0; i < 8; ++i) {
 			for (int j = 0; j < 4; ++j) {
-				MapNode node = new MapNode(new Coordinate(i, j), terrains.get(terrains.size() - 1));
+				MapNode node = new MapNode(new Coordinate(i, j), terrains.get(terrains.size() - 1),
+						FortState.NoOrUnknownFortState);
 				tmp.put(node.getCoordinate(), node);
 				terrains.remove(terrains.size() - 1);
 			}

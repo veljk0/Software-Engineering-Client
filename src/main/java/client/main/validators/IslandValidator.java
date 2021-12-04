@@ -30,7 +30,6 @@ public class IslandValidator implements IMapValidator {
 			findNeighbours(tmp, map);
 
 		}
-		System.out.println("BAUBAU: " + checkedNodes.size());
 		return checkedNodes.size() == 28;
 
 	}

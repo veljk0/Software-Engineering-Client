@@ -13,15 +13,6 @@ public class Map {
 		this.nodes = new HashMap<Coordinate, MapNode>();
 	}
 
-	// -------------------- getters & setters --------------//
-	public HashMap<Coordinate, MapNode> getNodes() {
-		return nodes;
-	}
-
-	public void setNodes(HashMap<Coordinate, MapNode> nodes) {
-		this.nodes = nodes;
-	}
-
 	public void printMap() {
 		Set<Coordinate> set = nodes.keySet();
 		List<Coordinate> list = new ArrayList<>();
@@ -32,11 +23,21 @@ public class Map {
 		Collections.sort(list, (c1, c2) -> c1.getY() - c2.getY());
 
 		for (Coordinate c : list) {
-			System.out.print(nodes.get(c).toString());
+			System.out.print("|" + nodes.get(c).toString() + '|');
 			if (c.getX() == 7)
 				System.out.println();
 		}
 
+	}
+
+	// -------------------- getters & setters --------------//
+	public HashMap<Coordinate, MapNode> getNodes() {
+		return nodes;
+	}
+
+	public void setNodes(HashMap<Coordinate, MapNode> nodes) {
+		this.nodes.clear();
+		this.nodes = nodes;
 	}
 
 }

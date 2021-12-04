@@ -15,9 +15,10 @@ public class MapNode {
 	public MapNode() {
 	}
 
-	public MapNode(Coordinate coordinate, Terrain fieldType) {
+	public MapNode(Coordinate coordinate, Terrain fieldType, FortState fortState) {
 		this.coordinate = coordinate;
 		this.fieldType = fieldType;
+		this.fortState = fortState;
 	}
 
 	// ------------------------- Getters & Setters
@@ -64,7 +65,7 @@ public class MapNode {
 
 	@Override
 	public String toString() {
-		return this.coordinate.getY() + " " + this.coordinate.getX() + " " + this.fieldType + "|    ";
+		return "X=" + this.coordinate.getY() + ";" + "Y=" + this.coordinate.getX();
 	}
 
 	@Override
