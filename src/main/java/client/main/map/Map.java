@@ -5,11 +5,16 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-
-import MessagesGameState.EPlayerPositionState;
 import client.main.enums.FortState;
 import client.main.enums.PlayerPositionState;
 import client.main.enums.Terrain;
+
+/**
+ * Map
+ *
+ * Using MapNode & Coordinates
+ * @author Veljko Radunovic 01528243
+ */
 
 public class Map {
 	private HashMap<Coordinate, MapNode> nodes;
@@ -18,7 +23,14 @@ public class Map {
 	public Map() {
 		this.nodes = new HashMap<Coordinate, MapNode>();
 	}
-
+	
+	
+	/**
+	 * This method is used to print all fields in vertical or horizontal layout.
+	 * Used to print both HalfMap and FullMap nodes.
+	 *
+	 *  @author Veljko Radunovic 01528243
+	 */
 	public void printMap() {
 		Set<Coordinate> set = nodes.keySet();
 		List<Coordinate> list = new ArrayList<>();
@@ -51,7 +63,12 @@ public class Map {
 
 	}
 
-	// -------------------- getters & setters --------------//
+	
+	/**
+	 * 
+	 * Getters & Setters
+	 * 
+	*/
 	public HashMap<Coordinate, MapNode> getNodes() {
 		return nodes;
 	}

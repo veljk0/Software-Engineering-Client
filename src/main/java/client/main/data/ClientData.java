@@ -1,9 +1,9 @@
 package client.main.data;
 
 import java.util.Objects;
-
 import client.main.enums.PlayerGameState;
 import client.main.map.Map;
+
 
 public class ClientData {
 	private String gameStateId;

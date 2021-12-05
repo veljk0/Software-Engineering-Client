@@ -5,9 +5,17 @@ import client.main.enums.PlayerPositionState;
 import client.main.enums.Terrain;
 import client.main.enums.TreasureState;
 
+/**
+ * MapNode
+ * Objects of this class represent map fields in this game. 
+ * The field has its coordinates, its type of terrain, the presence of the castle, the presence of gold and the position of the players.
+ * It overrides the equals method for easier field comaprison.
+ * @author Veljko Radunovic 01528243
+ */
+
 public class MapNode {
 	private Coordinate coordinate;
-	private Terrain fieldType;
+	private Terrain terrain;
 	private FortState fortState;
 	private TreasureState treasureState;
 	private PlayerPositionState playerPositionState;
@@ -17,13 +25,16 @@ public class MapNode {
 
 	public MapNode(Coordinate coordinate, Terrain fieldType, FortState fortState) {
 		this.coordinate = coordinate;
-		this.fieldType = fieldType;
+		this.terrain = fieldType;
 		this.fortState = fortState;
 		playerPositionState = PlayerPositionState.NoPlayerPresent;
 	}
 
-	// ------------------------- Getters & Setters
-	// ------------------------------------//
+	/**
+	 * 
+	 * Getters & Setters
+	 * 
+	*/
 	public Coordinate getCoordinate() {
 		return coordinate;
 	}
@@ -33,11 +44,11 @@ public class MapNode {
 	}
 
 	public Terrain getFieldType() {
-		return fieldType;
+		return terrain;
 	}
 
 	public void setFieldType(Terrain fieldType) {
-		this.fieldType = fieldType;
+		this.terrain = fieldType;
 	}
 
 	public FortState getFortState() {

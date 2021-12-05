@@ -1,5 +1,13 @@
 package client.main.map;
 
+/**
+ * Coordinate
+ * The coordinates contain the positions of x and y. 
+ * It is assigned to the MapNode, which is later also used as a key value for the HashMap, which contains all the nodes, ie the Map.
+ * 
+ * @author Veljko Radunovic 01528243
+ */
+
 public class Coordinate {
 	private int x;
 	private int y;
@@ -8,6 +16,12 @@ public class Coordinate {
 		this.x = x;
 		this.y = y;
 	}
+	
+	/**
+	 * 
+	 * Getters & Setters
+	 * 
+	*/
 
 	public int getX() {
 		return x;
@@ -30,26 +44,23 @@ public class Coordinate {
 		return "[" + x + "," + y + "]";
 	}
 
+	
+	/**
+	 * 
+	 * Coordinate overrides an equals method for accurate comparison of objects using the hashing principle.
+	 * 
+	 */
 	@Override
 	public boolean equals(Object o) {
 
-		// If the object is compared with itself then return true
-		if (o == this) {
+		if (o == this) 
 			return true;
-		}
-
-		/*
-		 * Check if o is an instance of Complex or not "null instanceof [type]" also
-		 * returns false
-		 */
-		if (!(o instanceof Coordinate)) {
+		
+		if (!(o instanceof Coordinate)) 
 			return false;
-		}
-
-		// typecast o to Complex so that we can compare data members
+		
 		Coordinate c = (Coordinate) o;
 
-		// Compare the data members and return accordingly
 		return Integer.compare(x, c.x) == 0 && Integer.compare(y, c.y) == 0;
 	}
 

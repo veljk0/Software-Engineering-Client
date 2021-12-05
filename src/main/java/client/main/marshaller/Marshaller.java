@@ -18,6 +18,7 @@ import client.main.enums.PlayerGameState;
 import client.main.enums.PlayerPositionState;
 import client.main.enums.Terrain;
 import client.main.enums.TreasureState;
+import client.main.exceptions.MarshallerException;
 import client.main.map.Coordinate;
 import client.main.map.Map;
 import client.main.map.MapNode;
@@ -25,25 +26,42 @@ import client.main.map.MapNode;
 public class Marshaller {
 
 	/**
-	 * Marshaller --- Making data readable for CLIENT - Methods
-	 * 
+	 * Marshaller --- Making data readable in both directions for the CLIENT and for the SERVER
+	 * Tasks:
+	 * 1. Convert PlayerGameState to Client
+	 * 2. Convert Map to Client
+	 * 		2.1 Convert Coordinates to Client
+	 * 		2.2 Convert Terrain to Client
+	 * 		2.3 Convert FortState to Client
+	 * 		2.4 Convert PlayerPosition to Client
+	 * 		2.5 Convert TreasureState to Client
+	 * 3. Convert map to Server
+	 * 4. Convert move to Server
 	 * @author Veljko Radunovic 01528243
 	 */
 
+	
+	/**
+	 * 
+	 * @param ClientData clientData
+	 * @param GameState serverGameState
+	 */
 	public void marshallDataToClientData(ClientData clientData, GameState serverGameState) {
 
 		if (!serverGameState.getGameStateId().equals(clientData.getGameStateId())) {
 			clientData.setGameStateId(serverGameState.getGameStateId());
 			convertPlayerGameStateToClient(clientData, serverGameState);
 			convertMapToClient(clientData, serverGameState);
-
-		} else {
-			// throw error
-		}
-
+		} 
+		
+		else throw new MarshallerException("Marshaller > converting data from server to ClientData");
 	}
 
-	// ------------- Convert PlayerGameState to Client ------------- //
+	/** 
+	 * TASK 1
+	 * @param ClientData clientData
+	 * @param GameState serverGameState
+	 */
 	public void convertPlayerGameStateToClient(ClientData clientData, GameState serverGameState) {		
 		Set<PlayerState> playerStates = serverGameState.getPlayers();
 		for (PlayerState p : playerStates)
@@ -62,11 +80,15 @@ public class Marshaller {
 					clientData.setGameState(PlayerGameState.Won);
 					break;
 				default:
-					break; // TODO BACI ERROR
+					throw new MarshallerException("Marshaller PlayerGameState error");
 				}
 	}
 
-	// ------------- Convert Map to Client ------------- //
+	/** TASK 2
+	 * 
+	 * @param ClientData clientData
+	 * @param GameState serverGameState
+	 */
 	public void convertMapToClient(ClientData clientData, GameState serverGameState) {
 
 		Collection<FullMapNode> fullMapNodes = serverGameState.getMap().get().getMapNodes();
@@ -88,12 +110,20 @@ public class Marshaller {
 
 	}
 
-	// ------------- Convert Coordinates to Client ------------- //
+	/** TASK 2.1
+	 * 
+	 * @param FullMapNode fullMapNode
+	 * @return Coordinate
+	 */
 	public Coordinate convertCoordinatesToClient(FullMapNode fullMapNode) {
 		return new Coordinate(fullMapNode.getX(), fullMapNode.getY());
 	}
 
-	// ------------- Convert Terrain to Client ------------- //
+	/** TASK 2.2
+	 * 
+	 * @param FullMapNode fullMapNode
+	 * @return Terrain
+	 */
 	public Terrain convertTerrainToClient(FullMapNode fullMapNode) {
 		switch (fullMapNode.getTerrain()) {
 		case Water:
@@ -103,12 +133,15 @@ public class Marshaller {
 		case Mountain:
 			return Terrain.MOUNTAIN;
 		default:
-			break; // TODO BACI ERROR
+			throw new MarshallerException("Marshaller Terrain error");
 		}
-		return null;
 	}
 
-	// ------------- Convert FortState to Client ------------- //
+	/** TASK 2.3
+	 * 
+	 * @param FullMapNode fullMapNode
+	 * @return FortState
+	 */
 	private FortState convertFortStateToClient(FullMapNode fullMapNode) {
 		switch (fullMapNode.getFortState()) {
 		case EnemyFortPresent:
@@ -118,12 +151,16 @@ public class Marshaller {
 		case NoOrUnknownFortState:
 			return FortState.NoOrUnknownFortState;
 		default:
-			break; // TODO BACI ERROR
+			throw new MarshallerException("Marshaller FortState error");
 		}
-		return null;
+	
 	}
 
-	// ------------- Convert PlayerPosition to Client ------------- //
+	/** TASK 2.4
+	 * 
+	 * @param FullMapNode fullMapNode
+	 * @return PlayerPositionState
+	 */
 	private PlayerPositionState convertPlayerPositionStateToClient(FullMapNode fullMapNode) {
 		switch (fullMapNode.getPlayerPositionState()) {
 		case BothPlayerPosition:
@@ -135,12 +172,15 @@ public class Marshaller {
 		case NoPlayerPresent:
 			return PlayerPositionState.NoPlayerPresent;
 		default:
-			break; // TODO BACI ERROR
+			throw new MarshallerException("Marshaller PlayerPositionState error");
 		}
-		return null;
 	}
 
-	// ------------- Convert TreasureState to Client ------------- //
+	/** TASK 2.5
+	 * 
+	 * @param FullMapNode fullMapNode
+	 * @return TreasureState
+	 */
 	private TreasureState convertTreasureStateToClient(FullMapNode fullMapNode) {
 		switch (fullMapNode.getTreasureState()) {
 		case MyTreasureIsPresent:
@@ -148,9 +188,8 @@ public class Marshaller {
 		case NoOrUnknownTreasureState:
 			return TreasureState.NoOrUnknownTreasureState;
 		default:
-			break; // TODO BACI ERROR
+			throw new MarshallerException("Marshaller TreasureState error");
 		}
-		return null;
 	}
 
 	/**
@@ -159,8 +198,12 @@ public class Marshaller {
 	 * @author Veljko Radunovic 01528243
 	 */
 
-	// ------------------------CONVERT MAP TO SERVER---------------------------//
-
+	
+	/** TAKS 3
+	 * 
+	 * @param Map map
+	 * @return Collection<HalfMapNode>
+	 */
 	public Collection<HalfMapNode> convertMapToServer(Map map) {
 		HalfMapNode halfMapNode;
 		Collection<HalfMapNode> halfMapNodes = new ArrayList<HalfMapNode>();
@@ -178,7 +221,7 @@ public class Marshaller {
 				terrain = ETerrain.Water;
 				break;
 			default:
-				break;
+				throw new MarshallerException("Marshaller Map to Server error");
 			}
 
 			if (map.getNodes().get(c).getFortState().equals(FortState.MyFortPresent))
@@ -191,7 +234,11 @@ public class Marshaller {
 		return halfMapNodes;
 	}
 
-	// ------------------------CONVERT MOVE TO SERVER---------------------------//
+	/** TASK 4
+	 * 
+	 * @param Move move
+	 * @return EMove
+	 */
 	public EMove convertMoveToServer(Move move) {
 		switch (move) {
 		case Down:
@@ -203,11 +250,7 @@ public class Marshaller {
 		case Left:
 			return EMove.Left;
 		default:
-			break;
+			throw new MarshallerException("Marshaller Move error");
 		}
-
-		// TODO throw error
-		return null;
 	}
-
 }

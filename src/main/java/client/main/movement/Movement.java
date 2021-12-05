@@ -22,7 +22,7 @@ public class Movement {
 	public Movement() {
 		this.mapType = mapType.VERTICAL;
 		this.myMapFields = new ArrayList<>();
-		this.visitedFields = new ArrayList<>();
+		this.setVisitedFields(new ArrayList<>());
 		this.defaultPosition = false;
 	}
 
@@ -91,6 +91,14 @@ public class Movement {
 		// Follow route
 		
 		return null; 
+	}
+
+	public List<MapNode> getVisitedFields() {
+		return visitedFields;
+	}
+
+	public void setVisitedFields(List<MapNode> visitedFields) {
+		this.visitedFields = visitedFields;
 	}
 
 }

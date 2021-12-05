@@ -2,7 +2,6 @@ package client.main;
 
 import client.main.controllers.MapController;
 import client.main.controllers.NetworkController;
-import client.main.map.Map;
 import client.main.worker.Worker;
 
 public class MainClient {
@@ -15,17 +14,13 @@ public class MainClient {
 
 		NetworkController networkController = new NetworkController(gameId, serverBaseUrl);
 		MapController mapController = MapController.getMapControllerInstance();
-//		Map map = mapController.generateMap();
-//		map.printMap();
-		
-		
 
 		try {
 			networkController.registerPlayer();
-			
+
 			Thread statusWorker = new Thread(new Worker(networkController));
 			statusWorker.start();
-			
+
 			networkController.sendHalfMap(mapController.generateMap());
 			networkController.startPlaying();
 
