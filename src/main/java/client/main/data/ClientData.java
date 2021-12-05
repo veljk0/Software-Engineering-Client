@@ -13,6 +13,7 @@ public class ClientData {
 
 	public ClientData() {
 		fullmap = new Map();
+		gameState = PlayerGameState.MustWait;
 	}
 
 	public ClientData(String playerID, Map fullmap, PlayerGameState gameState) {
@@ -27,7 +28,7 @@ public class ClientData {
 		return playerID;
 	}
 
-	public void setPlayerID(String playerID) {
+	public synchronized void setPlayerID(String playerID) {
 		this.playerID = playerID;
 	}
 
@@ -35,7 +36,7 @@ public class ClientData {
 		return fullmap;
 	}
 
-	public void setFullmap(Map fullmap) {
+	public synchronized void setFullmap(Map fullmap) {
 		this.fullmap = fullmap;
 	}
 
@@ -43,7 +44,7 @@ public class ClientData {
 		return gameState;
 	}
 
-	public void setGameState(PlayerGameState gameState) {
+	public synchronized void setGameState(PlayerGameState gameState) {
 		this.gameState = gameState;
 	}
 
@@ -51,7 +52,7 @@ public class ClientData {
 		return gameStateId;
 	}
 
-	public void setGameStateId(String gameStateId) {
+	public synchronized void setGameStateId(String gameStateId) {
 		this.gameStateId = gameStateId;
 	}
 

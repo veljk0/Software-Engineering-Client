@@ -17,6 +17,8 @@ public class Movement {
 	private List<MapNode> visitedFields;
 	private boolean defaultPosition;
 
+	Move move = Move.Up;
+	
 	public Movement() {
 		this.mapType = mapType.VERTICAL;
 		this.myMapFields = new ArrayList<>();
@@ -61,13 +63,34 @@ public class Movement {
 			if (defaultPosition && tmp.getCoordinate().getX() <= 7 && tmp.getCoordinate().getY() <= 3) {
 				myMapFields.add(tmp);
 			}
+			else if(!defaultPosition && (tmp.getCoordinate().getX() > 7 || tmp.getCoordinate().getY() > 3))
+				myMapFields.add(tmp);
 		}
 
 	}
 
 	public Move calculateNextMove() {
-		map.printMap();
-		return Move.Right;
+		/*
+		if(move == move.Down) move = Move.Up;
+		else move = Move.Down;
+		
+		
+		return move;
+		
+		*/
+		
+		
+		// find my position(first turn myburg)
+		
+		// Make dijkstra nodes 
+		
+		// Calculate cost and route to every node not visited 
+		
+		//find lowest cost
+		
+		// Follow route
+		
+		return null; 
 	}
 
 }

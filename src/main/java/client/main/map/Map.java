@@ -6,8 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import MessagesGameState.EPlayerPositionState;
+import client.main.enums.FortState;
+import client.main.enums.PlayerPositionState;
+import client.main.enums.Terrain;
+
 public class Map {
 	private HashMap<Coordinate, MapNode> nodes;
+	private boolean horizontalFullMap = false;
 
 	public Map() {
 		this.nodes = new HashMap<Coordinate, MapNode>();
@@ -16,15 +22,30 @@ public class Map {
 	public void printMap() {
 		Set<Coordinate> set = nodes.keySet();
 		List<Coordinate> list = new ArrayList<>();
-		for (Coordinate c : set)
+		System.out.println("MAP SIZE: " + set.size());
+		for (Coordinate c : set) {
+			if(!horizontalFullMap && c.getX() > 7) horizontalFullMap = true;
 			list.add(c);
+		}
 
 		Collections.sort(list, (c1, c2) -> c1.getX() - c2.getX());
 		Collections.sort(list, (c1, c2) -> c1.getY() - c2.getY());
 
+		
 		for (Coordinate c : list) {
-			System.out.print("|" + nodes.get(c).toString() + '|');
-			if (c.getX() == 7)
+			String helper = "G";
+			if(nodes.get(c).getFieldType().equals(Terrain.WATER)) helper = "W";
+			if(nodes.get(c).getFieldType().equals(Terrain.MOUNTAIN)) helper = "M";
+			if(nodes.get(c).getPlayerPositionState().equals(PlayerPositionState.BothPlayerPosition))
+				helper = "+"; 
+			if(nodes.get(c).getFortState().equals(FortState.MyFortPresent))
+				helper = "#";
+			System.out.print(helper + " " + nodes.get(c).getCoordinate().toString() + "  ");
+			
+			if(nodes.get(c).getPlayerPositionState().equals(PlayerPositionState.BothPlayerPosition))
+				System.out.print("*");
+			
+			if ((horizontalFullMap && c.getX() == 15) || (!horizontalFullMap && c.getX() == 7))
 				System.out.println();
 		}
 

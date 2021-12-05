@@ -19,6 +19,7 @@ public class MapNode {
 		this.coordinate = coordinate;
 		this.fieldType = fieldType;
 		this.fortState = fortState;
+		playerPositionState = PlayerPositionState.NoPlayerPresent;
 	}
 
 	// ------------------------- Getters & Setters

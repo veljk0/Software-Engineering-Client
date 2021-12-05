@@ -21,6 +21,8 @@ public class IslandValidator implements IMapValidator {
 
 	@Override
 	public boolean validateMap(Map map) {
+		askNodes.clear();
+		checkedNodes.clear();
 
 		findFirst(map);
 		while (!askNodes.isEmpty()) {

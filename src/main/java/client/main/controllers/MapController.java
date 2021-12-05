@@ -26,6 +26,7 @@ public class MapController {
 	public Map generateMap() {
 		do {
 			mapGenerator.generateMap(map);
+			map.printMap();
 		} while (!validatorController.validateMap(map));
 		return this.map;
 	}

@@ -73,6 +73,16 @@ public class NetworkController {
 	}
 
 	public void sendHalfMap(Map map) {
+		while(!clientData.getGameState().equals(PlayerGameState.MustAct)) { 
+			 try {
+				Thread.sleep(30);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		System.out.println(clientData.getGameState());
+
 		HalfMap halfMap = new HalfMap(this.playerID, marshaller.convertMapToServer(map));
 		@SuppressWarnings("rawtypes")
 		Mono<ResponseEnvelope> webAccess = baseWebClient.method(HttpMethod.POST).uri("/" + this.gameID + "/halfmaps")
@@ -83,17 +93,21 @@ public class NetworkController {
 		ResponseEnvelope<UniquePlayerIdentifier> resultReg = webAccess.block();
 		System.out.println(resultReg.getState());
 
-		if (resultReg.getState() == ERequestState.Error)
+		if (resultReg.getState() == ERequestState.Error) {
 			System.out.println("HALF MAP SENDING FAILED -> " + resultReg.getExceptionMessage());
+			System.exit(1);
+		}
 
 		else {
 			System.out.println("HALF MAP HAS BEEN SENT TO SERVER");
 			// logger.info("[ ---- MAP WAS SENT ----- ]");
 		}
+		System.out.println("#######################   " + clientData.getGameState());
 	}
 
 	public void getGameStatus() throws Exception {
 
+		
 		@SuppressWarnings("rawtypes")
 		Mono<ResponseEnvelope> webAccess = baseWebClient.method(HttpMethod.GET)
 				.uri("/" + this.gameID + "/states/" + this.playerID).retrieve().bodyToMono(ResponseEnvelope.class);
@@ -104,23 +118,22 @@ public class NetworkController {
 		if (requestResult.getState() == ERequestState.Error) {
 			System.out.println("getGameStatus ERROR -> " + requestResult.getExceptionMessage());
 		} else {
+			System.out.println("------------------   UPDATE  ------------------");
 			GameState gameState = requestResult.getData().get();
 			marshaller.marshallDataToClientData(this.clientData, gameState);
 		}
 	}
 
 	public void startPlaying() throws Exception {
-		Thread.sleep(400);
-		getGameStatus();
 
 		while (!clientData.getGameState().equals(PlayerGameState.Lost)
 				|| !clientData.getGameState().equals(PlayerGameState.Won)) {
 
-			movement.setMap(clientData.getFullmap());
-			sendMyNextMove(movement.calculateNextMove());
-
-			Thread.sleep(400);
-			getGameStatus();
+			if(clientData.getGameState().equals(PlayerGameState.MustAct)) {
+				movement.setMap(clientData.getFullmap());
+				sendMyNextMove(movement.calculateNextMove());
+				
+			}
 		}
 	}
 
@@ -137,11 +150,13 @@ public class NetworkController {
 		ResponseEnvelope<UniquePlayerIdentifier> resultReg = webAccess.block();
 		System.out.println(resultReg.getState());
 
-		if (resultReg.getState() == ERequestState.Error)
+		if (resultReg.getState() == ERequestState.Error) {
 			System.out.println("MOVE SENDING FAILED -> " + resultReg.getExceptionMessage());
-
+			System.exit(1);
+		}
 		else {
 			System.out.println("MY MOVE HAS BEEN SENT");
+			clientData.setGameState(PlayerGameState.MustWait);
 		}
 
 	}

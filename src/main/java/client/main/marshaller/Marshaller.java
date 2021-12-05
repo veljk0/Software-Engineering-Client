@@ -44,7 +44,7 @@ public class Marshaller {
 	}
 
 	// ------------- Convert PlayerGameState to Client ------------- //
-	public void convertPlayerGameStateToClient(ClientData clientData, GameState serverGameState) {
+	public void convertPlayerGameStateToClient(ClientData clientData, GameState serverGameState) {		
 		Set<PlayerState> playerStates = serverGameState.getPlayers();
 		for (PlayerState p : playerStates)
 			if (p.getUniquePlayerID().equals(clientData.getPlayerID()))
@@ -83,6 +83,8 @@ public class Marshaller {
 		}
 
 		clientData.getFullmap().setNodes(myMapNodes);
+		clientData.getFullmap().printMap();
+
 
 	}
 
