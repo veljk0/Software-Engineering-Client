@@ -77,7 +77,7 @@ public class MapNode {
 
 	@Override
 	public String toString() {
-		return "X=" + this.coordinate.getY() + ";" + "Y=" + this.coordinate.getX();
+		return "X = " + this.coordinate.getY() + ", " + "Y = " + this.coordinate.getX();
 	}
 
 	@Override

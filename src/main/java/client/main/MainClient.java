@@ -19,8 +19,8 @@ public class MainClient {
 //		System.out.println(node.equals(node1));
 		
 		/* TODO args */
-		String serverBaseUrl = "http://swe1.wst.univie.ac.at:18235";
-		String gameId = "a2dMH";
+		String serverBaseUrl = args[1];
+		String gameId = args[2];
 
 		NetworkController networkController = new NetworkController(gameId, serverBaseUrl);
 		MapController mapController = MapController.getMapControllerInstance();

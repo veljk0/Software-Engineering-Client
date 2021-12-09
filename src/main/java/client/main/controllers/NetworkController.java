@@ -79,7 +79,7 @@ public class NetworkController {
 	 */
 	public void registerPlayer() {
 		
-		PlayerRegistration playerReg = new PlayerRegistration("Veljko", "Radunovic", "123456789987654321");
+		PlayerRegistration playerReg = new PlayerRegistration("Veljko", "Radunovic", "01528243");
 		logger.info("[registerPlayer] PlayerRegistration object created: " + playerReg.getStudentFirstName() + " " + playerReg.getStudentLastName() + " " + playerReg.getStudentID());
 		
 		@SuppressWarnings("rawtypes")
@@ -206,7 +206,7 @@ public class NetworkController {
 		while (!clientData.getGameState().equals(PlayerGameState.Lost)
 				|| !clientData.getGameState().equals(PlayerGameState.Won)) {
 			
-			while(clientData.getGameState().equals(PlayerGameState.MustWait) ) { 
+			while(clientData.getGameState().equals(PlayerGameState.MustWait)) { 
 				try {
 					Thread.sleep(400);
 					getGameStatus();
@@ -269,7 +269,7 @@ public class NetworkController {
 		}
 		else {
 			logger.info("[sendMyNextMove] Move has been sent -> " + move.toString());
-			//clientData.setGameState(PlayerGameState.MustWait);
+			clientData.setGameState(PlayerGameState.MustWait);
 		}
 
 	}

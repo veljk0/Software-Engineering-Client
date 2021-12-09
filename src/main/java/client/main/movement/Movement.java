@@ -206,16 +206,15 @@ private void findNextMode(MapNode field, LinkedList<Move> list, int cost) {
 			
 	}
 		
-		System.out.println("########   Min COST    ##### ");
+		System.out.println("\n######   NEXT TARGET NODE    ##### ");
 		
-		System.out.println(nextNode.getCost());
 		System.out.println(nextNode.getField().toString());
 		
 		for(Move move: nextNode.getMoveList())
 		System.out.print(move + " ");
 	
 	
-        System.out.println("\n\n");
+        System.out.println("\n");
 	
 	return nextNode;
 }
