@@ -48,14 +48,21 @@ public class Map {
 			String helper = "G";
 			if(nodes.get(c).getFieldType().equals(Terrain.WATER)) helper = "W";
 			if(nodes.get(c).getFieldType().equals(Terrain.MOUNTAIN)) helper = "M";
-			if(nodes.get(c).getPlayerPositionState().equals(PlayerPositionState.BothPlayerPosition))
+			if(nodes.get(c).getPlayerPositionState().equals(PlayerPositionState.MyPlayerPosition))
 				helper = "+"; 
+			if(nodes.get(c).getPlayerPositionState().equals(PlayerPositionState.BothPlayerPosition))
+				helper = "*"; 
+			if(nodes.get(c).getPlayerPositionState().equals(PlayerPositionState.EnemyPlayerPosition))
+				helper = "&"; 
 			if(nodes.get(c).getFortState().equals(FortState.MyFortPresent))
 				helper = "#";
+			if(nodes.get(c).getFortState().equals(FortState.EnemyFortPresent))
+				helper = "$";
+			
+			
 			System.out.print(helper + " " + nodes.get(c).getCoordinate().toString() + "  ");
 			
-			if(nodes.get(c).getPlayerPositionState().equals(PlayerPositionState.BothPlayerPosition))
-				System.out.print("*");
+			
 			
 			if ((horizontalFullMap && c.getX() == 15) || (!horizontalFullMap && c.getX() == 7))
 				System.out.println();
@@ -76,6 +83,11 @@ public class Map {
 	public void setNodes(HashMap<Coordinate, MapNode> nodes) {
 		this.nodes.clear();
 		this.nodes = nodes;
+	}
+
+
+	public boolean isFullMap() {
+		return nodes.size() == 64;
 	}
 
 }

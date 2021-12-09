@@ -3,26 +3,61 @@ package client.main.data;
 import java.util.Objects;
 import client.main.enums.PlayerGameState;
 import client.main.map.Map;
+import client.main.map.MapNode;
 
 
 public class ClientData {
+	
+	private static ClientData data = null; 
+	
 	private String gameStateId;
 	private String playerID;
 	private Map fullmap;
 	private PlayerGameState gameState;
+	private MapNode currentNodePosition;
+	
+	private boolean treasureSpoted; 
+	private boolean treasureFound; 
+	private boolean enemyFortresFound; 
 
-	public ClientData() {
+	private ClientData() {
 		fullmap = new Map();
 		gameState = PlayerGameState.MustWait;
+		treasureSpoted = false; 
+		treasureFound = false; 
+		enemyFortresFound = false; 
 	}
-
+	
+	/*
 	public ClientData(String playerID, Map fullmap, PlayerGameState gameState) {
 		this.playerID = playerID;
 		this.fullmap = fullmap;
 		this.gameState = gameState;
 	}
+	*/
+	
+	public static ClientData getClientDataInstance() {
+		if(data == null)
+			data = new ClientData();
+		
+		return data; 
+	}
+
+	
 
 	// ---------------- Getters & Setters -------------------- //
+	
+	public boolean isTreasureFound() {
+		return treasureFound;
+	}
+	
+	public synchronized void setCurrentNodePosition(MapNode currentNodePosition) {
+		this.currentNodePosition = currentNodePosition;
+	}
+	
+	public MapNode getCurrentNodePosition() {
+		return currentNodePosition;
+	}
 
 	public String getPlayerID() {
 		return playerID;
@@ -77,6 +112,20 @@ public class ClientData {
 		ClientData other = (ClientData) obj;
 		return Objects.equals(fullmap, other.fullmap) && gameState == other.gameState
 				&& Objects.equals(playerID, other.playerID);
+	}
+
+	public void setTresureFound(boolean b) {
+		this.treasureFound = b; 
+		
+	}
+
+	public void setEnemyFortresFound(boolean b) {
+		this.enemyFortresFound = b; 
+		
+	}
+	
+	public void setTreasureSpoted(boolean treasureSpoted) {
+		this.treasureSpoted = treasureSpoted;
 	}
 
 }

@@ -25,6 +25,7 @@ import client.main.map.MapNode;
 
 public class Marshaller {
 
+
 	/**
 	 * Marshaller --- Making data readable in both directions for the CLIENT and for the SERVER
 	 * Tasks:
@@ -54,7 +55,7 @@ public class Marshaller {
 			convertMapToClient(clientData, serverGameState);
 		} 
 		
-		else throw new MarshallerException("Marshaller > converting data from server to ClientData");
+		//else throw new MarshallerException("Marshaller > converting data from server to ClientData");
 	}
 
 	/** 
@@ -65,7 +66,12 @@ public class Marshaller {
 	public void convertPlayerGameStateToClient(ClientData clientData, GameState serverGameState) {		
 		Set<PlayerState> playerStates = serverGameState.getPlayers();
 		for (PlayerState p : playerStates)
-			if (p.getUniquePlayerID().equals(clientData.getPlayerID()))
+			if (p.getUniquePlayerID().equals(clientData.getPlayerID())) {
+				
+				if(p.hasCollectedTreasure()) 
+					ClientData.getClientDataInstance().setTresureFound(true);
+				
+		
 				switch (p.getState()) {
 				case MustWait:
 					clientData.setGameState(PlayerGameState.MustWait);
@@ -74,14 +80,20 @@ public class Marshaller {
 					clientData.setGameState(PlayerGameState.MustAct);
 					break;
 				case Lost:
+					System.out.println("lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll");
 					clientData.setGameState(PlayerGameState.Lost);
+					//System.exit(1);
 					break;
 				case Won:
+					System.out.println("####################\n"
+							  		 + "#####    WON   #####\n"
+							         + "####################");
 					clientData.setGameState(PlayerGameState.Won);
 					break;
 				default:
 					throw new MarshallerException("Marshaller PlayerGameState error");
 				}
+			}
 	}
 
 	/** TASK 2
@@ -91,23 +103,24 @@ public class Marshaller {
 	 */
 	public void convertMapToClient(ClientData clientData, GameState serverGameState) {
 
-		Collection<FullMapNode> fullMapNodes = serverGameState.getMap().get().getMapNodes();
-		HashMap<Coordinate, MapNode> myMapNodes = new HashMap<Coordinate, MapNode>();
+		if(serverGameState.getMap().get().getMapNodes().size() == 64) {
+			Collection<FullMapNode> fullMapNodes = serverGameState.getMap().get().getMapNodes();
+			HashMap<Coordinate, MapNode> myMapNodes = new HashMap<Coordinate, MapNode>();
+	
+			for (FullMapNode fullMapNode : fullMapNodes) {
+				MapNode myMapNode = new MapNode();
+				myMapNode.setCoordinate(convertCoordinatesToClient(fullMapNode));
+				myMapNode.setFieldType(convertTerrainToClient(fullMapNode));
+				myMapNode.setFortState(convertFortStateToClient(fullMapNode));
+				myMapNode.setPlayerPositionState(convertPlayerPositionStateToClient(fullMapNode));
+				myMapNode.setTreasureState(convertTreasureStateToClient(fullMapNode));
+				myMapNodes.put(myMapNode.getCoordinate(), myMapNode);
+			}
+	
+			clientData.getFullmap().setNodes(myMapNodes);
+			clientData.getFullmap().printMap();
 
-		for (FullMapNode fullMapNode : fullMapNodes) {
-			MapNode myMapNode = new MapNode();
-			myMapNode.setCoordinate(convertCoordinatesToClient(fullMapNode));
-			myMapNode.setFieldType(convertTerrainToClient(fullMapNode));
-			myMapNode.setFortState(convertFortStateToClient(fullMapNode));
-			myMapNode.setPlayerPositionState(convertPlayerPositionStateToClient(fullMapNode));
-			myMapNode.setTreasureState(convertTreasureStateToClient(fullMapNode));
-			myMapNodes.put(myMapNode.getCoordinate(), myMapNode);
 		}
-
-		clientData.getFullmap().setNodes(myMapNodes);
-		clientData.getFullmap().printMap();
-
-
 	}
 
 	/** TASK 2.1
@@ -145,6 +158,7 @@ public class Marshaller {
 	private FortState convertFortStateToClient(FullMapNode fullMapNode) {
 		switch (fullMapNode.getFortState()) {
 		case EnemyFortPresent:
+			ClientData.getClientDataInstance().setEnemyFortresFound(true);
 			return FortState.EnemyFortPresent;
 		case MyFortPresent:
 			return FortState.MyFortPresent;
@@ -168,6 +182,7 @@ public class Marshaller {
 		case EnemyPlayerPosition:
 			return PlayerPositionState.EnemyPlayerPosition;
 		case MyPlayerPosition:
+			
 			return PlayerPositionState.MyPlayerPosition;
 		case NoPlayerPresent:
 			return PlayerPositionState.NoPlayerPresent;
@@ -184,6 +199,7 @@ public class Marshaller {
 	private TreasureState convertTreasureStateToClient(FullMapNode fullMapNode) {
 		switch (fullMapNode.getTreasureState()) {
 		case MyTreasureIsPresent:
+			ClientData.getClientDataInstance().setTreasureSpoted(true);
 			return TreasureState.MyTreasureIsPresent;
 		case NoOrUnknownTreasureState:
 			return TreasureState.NoOrUnknownTreasureState;

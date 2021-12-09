@@ -46,7 +46,7 @@ public class NetworkController {
 	 * defining class logger
 	 */
 	static Logger logger = LoggerFactory.getLogger(NetworkController.class);
-
+	int cnt = 0; 
 	private String gameID;
 	private String playerID;
 	private String url;
@@ -63,7 +63,7 @@ public class NetworkController {
 				.defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_XML_VALUE)
 				.defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML_VALUE).build();
 
-		clientData = new ClientData();
+		clientData = ClientData.getClientDataInstance();
 		marshaller = new Marshaller();
 		movement = new Movement();
 		logger.info("Wake up NetworkController for game: " + gameID + "on Server: " + url);
@@ -79,7 +79,7 @@ public class NetworkController {
 	 */
 	public void registerPlayer() {
 		
-		PlayerRegistration playerReg = new PlayerRegistration("Veljko", "Radunovic", "01528243");
+		PlayerRegistration playerReg = new PlayerRegistration("Veljko", "Radunovic", "123456789987654321");
 		logger.info("[registerPlayer] PlayerRegistration object created: " + playerReg.getStudentFirstName() + " " + playerReg.getStudentLastName() + " " + playerReg.getStudentID());
 		
 		@SuppressWarnings("rawtypes")
@@ -117,9 +117,16 @@ public class NetworkController {
 		
 		//Check if it's my turn
 		while(!clientData.getGameState().equals(PlayerGameState.MustAct)) { 
-			 try {
-				Thread.sleep(30);
+			try {
+				Thread.sleep(400);
+				getGameStatus();
+				
+				
 			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -143,6 +150,7 @@ public class NetworkController {
 
 		else {
 			logger.info("[sendHalfMap] HalfMap has been sent to server");
+			clientData.setGameState(PlayerGameState.MustWait);
 		}
 	}
 
@@ -169,9 +177,9 @@ public class NetworkController {
 		ResponseEnvelope<GameState> requestResult = webAccess.block();
 
 		if (requestResult.getState() == ERequestState.Error) {
-			logger.error("[getGameStatus] getGameStatus ERROR -> " + requestResult.getExceptionMessage());
+			logger.error("+++++++++++++++++++++++++++++++++++++++++++++++++  [getGameStatus] getGameStatus ERROR -> " + requestResult.getExceptionMessage());
 		} else {
-			logger.info("[getGameStatus] Updating gameState");
+			//logger.info("[getGameStatus] Updating gameState");
 			GameState gameState = requestResult.getData().get();
 			marshaller.marshallDataToClientData(this.clientData, gameState);
 		}
@@ -192,15 +200,44 @@ public class NetworkController {
 	 * Using Movement & ClientData instances to process tasks
 	 */
 	public void startPlaying() throws Exception {
-
+		
+		boolean fieldPrepared = false;
+		
 		while (!clientData.getGameState().equals(PlayerGameState.Lost)
 				|| !clientData.getGameState().equals(PlayerGameState.Won)) {
+			
+			while(clientData.getGameState().equals(PlayerGameState.MustWait) ) { 
+				try {
+					Thread.sleep(400);
+					getGameStatus();
+					
+					
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			//System.out.println("####################################    MOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO           Player next Field destination: ");
+
+			if(clientData.getFullmap().isFullMap() && !fieldPrepared) {
+				fieldPrepared = true; 
+				movement.prepareField();
+			}
 
 			if(clientData.getGameState().equals(PlayerGameState.MustAct)) {
-				movement.setMap(clientData.getFullmap());
+				//movement.setMap(clientData.getFullmap());
 				sendMyNextMove(movement.calculateNextMove());
+				cnt++;
+				if(cnt > 60) System.out.println("##################\n"
+											  + "##### " + cnt + " #####\n"
+											  + "##################");
 			}
 		}
+		System.out.println("========================================================================  END  ===================================================================");
 	}
 	
 	
@@ -232,7 +269,7 @@ public class NetworkController {
 		}
 		else {
 			logger.info("[sendMyNextMove] Move has been sent -> " + move.toString());
-			clientData.setGameState(PlayerGameState.MustWait);
+			//clientData.setGameState(PlayerGameState.MustWait);
 		}
 
 	}

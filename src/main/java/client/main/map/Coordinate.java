@@ -61,7 +61,7 @@ public class Coordinate {
 		
 		Coordinate c = (Coordinate) o;
 
-		return Integer.compare(x, c.x) == 0 && Integer.compare(y, c.y) == 0;
+		return Integer.valueOf(x) == Integer.valueOf(c.getX()) && Integer.valueOf(y) == Integer.valueOf(c.getY());
 	}
 
 }
